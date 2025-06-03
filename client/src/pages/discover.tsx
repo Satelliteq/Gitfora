@@ -45,7 +45,7 @@ export default function Discover() {
         !repo.description?.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-    if (selectedLanguage && repo.language !== selectedLanguage) {
+    if (selectedLanguage && selectedLanguage !== "all" && repo.language !== selectedLanguage) {
       return false;
     }
     return true;
@@ -88,7 +88,7 @@ export default function Discover() {
                         <SelectValue placeholder="Language" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Languages</SelectItem>
+                        <SelectItem value="all">All Languages</SelectItem>
                         {technologies?.slice(0, 20).map((tech: any) => (
                           <SelectItem key={tech.name} value={tech.name}>
                             {tech.name}
