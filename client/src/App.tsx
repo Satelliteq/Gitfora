@@ -9,6 +9,7 @@ import Analytics from "@/pages/analytics";
 import Trending from "@/pages/trending";
 import Technologies from "@/pages/technologies";
 import TopUsers from "@/pages/users";
+import Discover from "@/pages/discover";
 import NotFound from "@/pages/not-found";
 import Sidebar from "@/components/layout/sidebar";
 
@@ -19,6 +20,7 @@ function Router() {
       <main className="flex-1 overflow-auto">
         <Switch>
           <Route path="/" component={Dashboard} />
+          <Route path="/discover" component={Discover} />
           <Route path="/search" component={UserSearch} />
           <Route path="/analytics" component={Analytics} />
           <Route path="/trending" component={Trending} />

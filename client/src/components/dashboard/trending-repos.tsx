@@ -49,20 +49,22 @@ export default function TrendingRepos({ repositories, isLoading = false }: Trend
     return num.toString();
   };
 
-  const getLanguageColor = (language: string | null) => {
-    const colors: Record<string, string> = {
-      JavaScript: "bg-yellow-500",
-      TypeScript: "bg-blue-500",
-      Python: "bg-green-500",
-      Java: "bg-red-500",
-      "C#": "bg-purple-500",
-      Go: "bg-cyan-500",
-      Rust: "bg-orange-500",
-      Ruby: "bg-red-600",
-      PHP: "bg-indigo-500",
-      Swift: "bg-orange-600",
+  const getLanguageLogo = (language: string | null) => {
+    const logos: Record<string, { logo: string; color: string }> = {
+      JavaScript: { logo: "🟨", color: "bg-yellow-500" },
+      TypeScript: { logo: "🔷", color: "bg-blue-500" },
+      Python: { logo: "🐍", color: "bg-green-500" },
+      Java: { logo: "☕", color: "bg-red-500" },
+      "C#": { logo: "#️⃣", color: "bg-purple-500" },
+      Go: { logo: "🐹", color: "bg-cyan-500" },
+      Rust: { logo: "🦀", color: "bg-orange-500" },
+      Ruby: { logo: "💎", color: "bg-red-600" },
+      PHP: { logo: "🐘", color: "bg-indigo-500" },
+      Swift: { logo: "🍎", color: "bg-orange-600" },
+      Kotlin: { logo: "🎯", color: "bg-purple-600" },
+      Dart: { logo: "🎯", color: "bg-blue-600" },
     };
-    return colors[language || ""] || "bg-gray-500";
+    return logos[language || ""] || { logo: "💻", color: "bg-gray-500" };
   };
 
   return (
@@ -91,9 +93,10 @@ export default function TrendingRepos({ repositories, isLoading = false }: Trend
                     {repo.language && (
                       <Badge 
                         variant="secondary" 
-                        className={`text-xs px-2 py-1 ${getLanguageColor(repo.language)} text-white`}
+                        className={`text-xs px-2 py-1 ${getLanguageLogo(repo.language).color} text-white flex items-center space-x-1`}
                       >
-                        {repo.language}
+                        <span>{getLanguageLogo(repo.language).logo}</span>
+                        <span>{repo.language}</span>
                       </Badge>
                     )}
                   </div>
