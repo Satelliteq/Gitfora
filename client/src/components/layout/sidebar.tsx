@@ -7,9 +7,13 @@ import {
   Users, 
   BarChart3,
   Github,
-  Compass
+  Compass,
+  Languages
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/language-context";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },

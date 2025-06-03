@@ -132,7 +132,7 @@ export const getLanguageInfo = (language: string | null): LanguageInfo => {
   const normalizedLanguage = language?.toLowerCase() || "";
   
   return languageMap[normalizedLanguage] || {
-    icon: <span>💻</span>,
+    icon: "💻",
     color: "#6B7280",
     bgColor: "bg-gray-500",
     name: language || "Unknown"

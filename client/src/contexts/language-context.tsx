@@ -55,7 +55,7 @@ const translations = {
     // Common
     followers: "followers",
     following: "following",
-    repositories: "repositories",
+    repos: "repositories",
     activity: "activity",
     stars: "stars",
     forks: "forks",
@@ -114,7 +114,7 @@ const translations = {
     // Common
     followers: "takipçi",
     following: "takip",
-    repositories: "depo",
+    repos: "depo",
     activity: "aktivite",
     stars: "yıldız",
     forks: "fork",
@@ -147,7 +147,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations.en] || key;
+    const translationKeys = translations[language] as Record<string, string>;
+    return translationKeys[key] || key;
   };
 
   return (
