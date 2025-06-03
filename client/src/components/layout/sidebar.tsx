@@ -6,7 +6,8 @@ import {
   Code, 
   Users, 
   BarChart3,
-  Github
+  Github,
+  Compass
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
