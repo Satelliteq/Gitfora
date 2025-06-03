@@ -104,6 +104,66 @@ export class MemStorage implements IStorage {
       };
       this.technologies.set(tech.name, technology);
     });
+
+    // Initialize some sample GitHub users for demo
+    const sampleUsers = [
+      {
+        username: 'torvalds',
+        name: 'Linus Torvalds',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1024025?v=4',
+        followers: 180000,
+        following: 0,
+        public_repos: 6,
+        bio: 'Creator of Linux and Git',
+        location: 'Portland, OR',
+        company: 'Linux Foundation',
+        blog: null
+      },
+      {
+        username: 'gaearon',
+        name: 'Dan Abramov',
+        avatar_url: 'https://avatars.githubusercontent.com/u/810438?v=4',
+        followers: 95000,
+        following: 171,
+        public_repos: 72,
+        bio: 'Working on @reactjs. Co-author of Redux and Create React App.',
+        location: 'London, UK',
+        company: '@facebook',
+        blog: 'https://overreacted.io'
+      },
+      {
+        username: 'addyosmani',
+        name: 'Addy Osmani',
+        avatar_url: 'https://avatars.githubusercontent.com/u/110953?v=4',
+        followers: 42000,
+        following: 1705,
+        public_repos: 115,
+        bio: 'Engineering Manager @ Google working on Chrome • Author • Creator of TodoMVC, Yeoman',
+        location: 'Mountain View, CA',
+        company: 'Google',
+        blog: 'https://addyosmani.com'
+      }
+    ];
+
+    sampleUsers.forEach(user => {
+      const id = this.currentGithubUserId++;
+      const githubUser: GithubUser = {
+        id,
+        username: user.username,
+        name: user.name,
+        avatar_url: user.avatar_url,
+        followers: user.followers,
+        following: user.following,
+        public_repos: user.public_repos,
+        bio: user.bio,
+        location: user.location,
+        company: user.company,
+        blog: user.blog,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      this.githubUsers.set(user.username.toLowerCase(), githubUser);
+    });
   }
 
   async getUser(id: number): Promise<User | undefined> {

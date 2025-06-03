@@ -5,6 +5,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "@/pages/dashboard";
 import UserSearch from "@/pages/user-search";
+import Analytics from "@/pages/analytics";
+import Trending from "@/pages/trending";
+import Technologies from "@/pages/technologies";
+import TopUsers from "@/pages/users";
 import NotFound from "@/pages/not-found";
 import Sidebar from "@/components/layout/sidebar";
 
@@ -16,6 +20,10 @@ function Router() {
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/search" component={UserSearch} />
+          <Route path="/analytics" component={Analytics} />
+          <Route path="/trending" component={Trending} />
+          <Route path="/technologies" component={Technologies} />
+          <Route path="/users" component={TopUsers} />
           <Route component={NotFound} />
         </Switch>
       </main>
