@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/language-context";
 import Dashboard from "@/pages/dashboard";
 import UserSearch from "@/pages/user-search";
+import UserProfile from "@/pages/user-profile";
 import Analytics from "@/pages/analytics";
 import Trending from "@/pages/trending";
 import Technologies from "@/pages/technologies";
@@ -23,6 +24,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/discover" component={Discover} />
           <Route path="/search" component={UserSearch} />
+          <Route path="/user/:username" component={UserProfile} />
           <Route path="/analytics" component={Analytics} />
           <Route path="/trending" component={Trending} />
           <Route path="/technologies" component={Technologies} />
