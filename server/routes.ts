@@ -186,6 +186,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Store GitHub users endpoint
+  app.post("/api/github/users", async (req, res) => {
+    try {
+      const userData = req.body;
+      
+      if (!userData.username) {
+        return res.status(400).json({ error: "Username is required" });
+      }
+
+      // Transform the data to match our schema
+      const userToStore = {
+        username: userData.username || userData.login,
+        name: userData.name,
+        avatar_url: userData.avatar_url,
+        bio: userData.bio,
+        location: userData.location,
+        company: userData.company,
+        blog: userData.blog,
+        followers: userData.followers,
+        following: userData.following,
+        public_repos: userData.public_repos,
+        created_at: userData.created_at ? new Date(userData.created_at) : new Date(),
+        updated_at: new Date()
+      };
+
+      const user = await storage.createOrUpdateGithubUser(userToStore);
+      res.json(user);
+      
+    } catch (error) {
+      console.error("GitHub user storage error:", error);
+      res.status(500).json({ error: "Failed to store user" });
+    }
+  });
+
   // Activity data for charts (mock data for demo)
   app.get("/api/activity/weekly", async (req, res) => {
     try {

@@ -213,15 +213,20 @@ export default function UserSearch() {
                       </div>
                       
                       <div className="flex gap-3">
-                        <Button onClick={() => {
-                          // Add user to our database and then navigate
-                          fetch('/api/github/users', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(searchResults)
-                          }).then(() => {
+                        <Button onClick={async () => {
+                          try {
+                            // Add user to our database and then navigate
+                            await fetch('/api/github/users', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(searchResults)
+                            });
+                            
+                            // Navigate to user details page
                             window.location.href = `/user-details/${(searchResults as any).username}`;
-                          });
+                          } catch (error) {
+                            console.error('Failed to store user:', error);
+                          }
                         }}>
                           View Profile
                         </Button>

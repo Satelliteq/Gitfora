@@ -53,20 +53,37 @@ export default function UserDetails() {
   const username = params.username;
   const { t } = useLanguage();
 
+  // First try to get all users to find the current user
   const { data: allUsers, isLoading: usersLoading } = useQuery({
-    queryKey: ["/api/users/rising", { limit: 30 }]
-  });
-
-  const { data: repositories } = useQuery({
-    queryKey: ["/api/repositories/trending", { limit: 50 }]
-  });
-
-  const { data: technologies } = useQuery({
-    queryKey: ["/api/technologies", { limit: 50 }]
+    queryKey: ["/api/users/rising", { limit: 50 }]
   });
 
   // Find current user from the users list
   const currentUser = (allUsers as GithubUser[])?.find(u => u.username === username);
+
+  // If user not found in rising users, try to search for them directly
+  const { data: searchedUser, isLoading: searchLoading } = useQuery({
+    queryKey: ["/api/github/search", username],
+    queryFn: async () => {
+      if (currentUser) return null; // Already found in rising users
+      
+      const response = await fetch("/api/github/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+      
+      if (!response.ok) {
+        throw new Error("User not found");
+      }
+      
+      return response.json();
+    },
+    enabled: !currentUser && !usersLoading && !!username
+  });
+
+  // Use either the user from rising list or the searched user
+  const user = currentUser || searchedUser;
 
   // Generate analytics data for the user
   const generateUserAnalytics = (user: GithubUser) => {
@@ -100,7 +117,7 @@ export default function UserDetails() {
     };
   };
 
-  if (usersLoading) {
+  if (usersLoading || searchLoading) {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="container mx-auto max-w-7xl">
@@ -136,7 +153,7 @@ export default function UserDetails() {
     );
   }
 
-  if (!currentUser) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="container mx-auto max-w-7xl">
@@ -168,7 +185,7 @@ export default function UserDetails() {
     );
   }
 
-  const analytics = generateUserAnalytics(currentUser);
+  const analytics = generateUserAnalytics(user);
   const formatNumber = (num: number) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
     if (num >= 1000) return (num / 1000).toFixed(1) + "K";
@@ -205,50 +222,50 @@ export default function UserDetails() {
               <CardContent className="p-6">
                 <div className="flex flex-col items-center space-y-4">
                   <Avatar className="w-32 h-32 border-4 border-primary/20">
-                    <AvatarImage src={currentUser.avatar_url || ''} alt={currentUser.name || currentUser.username} />
+                    <AvatarImage src={user.avatar_url || ''} alt={user.name || user.username} />
                     <AvatarFallback className="text-2xl">
-                      {(currentUser.name || currentUser.username)?.charAt(0)?.toUpperCase()}
+                      {(user.name || user.username)?.charAt(0)?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
 
                   <div className="text-center space-y-2">
-                    <h2 className="text-2xl font-bold">{currentUser.name || currentUser.username}</h2>
-                    <p className="text-muted-foreground">@{currentUser.username}</p>
+                    <h2 className="text-2xl font-bold">{user.name || user.username}</h2>
+                    <p className="text-muted-foreground">@{user.username}</p>
                     <Badge variant="outline" className="text-xs">
                       {analytics.contributionLevel} Developer
                     </Badge>
                   </div>
 
-                  {currentUser.bio && (
+                  {user.bio && (
                     <p className="text-sm text-muted-foreground text-center p-3 bg-muted/50 rounded-lg">
-                      {currentUser.bio}
+                      {user.bio}
                     </p>
                   )}
 
                   <div className="w-full space-y-3 text-sm">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-muted-foreground" />
-                      <span>{formatNumber(currentUser.followers || 0)} followers</span>
+                      <span>{formatNumber(user.followers || 0)} followers</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <BookOpen className="w-4 h-4 text-muted-foreground" />
-                      <span>{currentUser.public_repos || 0} repositories</span>
+                      <span>{user.public_repos || 0} repositories</span>
                     </div>
-                    {currentUser.location && (
+                    {user.location && (
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <span>{currentUser.location}</span>
+                        <span>{user.location}</span>
                       </div>
                     )}
-                    {currentUser.company && (
+                    {user.company && (
                       <div className="flex items-center gap-2">
                         <Building className="w-4 h-4 text-muted-foreground" />
-                        <span>{currentUser.company}</span>
+                        <span>{user.company}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span>Joined {format(new Date(currentUser.created_at || ''), 'MMM yyyy')}</span>
+                      <span>Joined {format(new Date(user.created_at || ''), 'MMM yyyy')}</span>
                     </div>
                   </div>
 
@@ -265,7 +282,7 @@ export default function UserDetails() {
                   </div>
 
                   <Button className="w-full" asChild>
-                    <a href={`https://github.com/${currentUser.username}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://github.com/${user.username}`} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View on GitHub
                     </a>
@@ -292,7 +309,7 @@ export default function UserDetails() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Followers</p>
-                          <p className="text-2xl font-bold">{formatNumber(currentUser.followers || 0)}</p>
+                          <p className="text-2xl font-bold">{formatNumber(user.followers || 0)}</p>
                         </div>
                         <Users className="w-8 h-8 text-primary" />
                       </div>
@@ -304,7 +321,7 @@ export default function UserDetails() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Repositories</p>
-                          <p className="text-2xl font-bold">{currentUser.public_repos || 0}</p>
+                          <p className="text-2xl font-bold">{user.public_repos || 0}</p>
                         </div>
                         <BookOpen className="w-8 h-8 text-green-500" />
                       </div>
@@ -316,7 +333,7 @@ export default function UserDetails() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Following</p>
-                          <p className="text-2xl font-bold">{formatNumber(currentUser.following || 0)}</p>
+                          <p className="text-2xl font-bold">{formatNumber(user.following || 0)}</p>
                         </div>
                         <TrendingUp className="w-8 h-8 text-blue-500" />
                       </div>
