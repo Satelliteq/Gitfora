@@ -24,7 +24,7 @@ export default function Dashboard() {
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
-    queryKey: ["/api/repositories/trending", { limit: 5 }],
+    queryKey: ["/api/repositories/trending", { limit: 10 }],
   });
 
   const { data: risingUsers, isLoading: usersLoading } = useQuery({
