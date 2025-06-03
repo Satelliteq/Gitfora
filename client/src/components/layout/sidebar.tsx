@@ -26,7 +26,7 @@ export default function Sidebar() {
     { key: "analytics", name: t("analytics"), href: "/analytics", icon: BarChart3 },
     { key: "trending", name: t("trending"), href: "/trending", icon: TrendingUp },
     { key: "technologies", name: t("technologies"), href: "/technologies", icon: Code },
-    { key: "top", name: t("top"), href: "/users", icon: Users },
+    { key: "top", name: t("top"), href: "/top", icon: Users },
   ];
 
   return (
