@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Star, GitFork, TrendingUp, ExternalLink } from "lucide-react";
+import { Link } from "wouter";
+import { useLanguage } from "@/contexts/language-context";
+import { getLanguageInfo } from "@/lib/language-logos";
 import type { Repository } from "@shared/schema";
 
 interface TrendingReposProps {
@@ -11,24 +14,26 @@ interface TrendingReposProps {
 }
 
 export default function TrendingRepos({ repositories, isLoading = false }: TrendingReposProps) {
+  const { t } = useLanguage();
+
   if (isLoading) {
     return (
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Trending Repositories</CardTitle>
+            <CardTitle className="text-lg">{t("trending_repos")}</CardTitle>
             <Skeleton className="w-16 h-6" />
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="p-4 bg-muted rounded-lg">
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="p-3 bg-muted rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
                   <Skeleton className="w-32 h-4" />
                   <Skeleton className="w-16 h-5" />
                 </div>
-                <Skeleton className="w-full h-4 mb-2" />
+                <Skeleton className="w-full h-3 mb-2" />
                 <div className="flex items-center space-x-4">
                   <Skeleton className="w-12 h-3" />
                   <Skeleton className="w-12 h-3" />
@@ -49,32 +54,18 @@ export default function TrendingRepos({ repositories, isLoading = false }: Trend
     return num.toString();
   };
 
-  const getLanguageLogo = (language: string | null) => {
-    const logos: Record<string, { logo: string; color: string }> = {
-      JavaScript: { logo: "🟨", color: "bg-yellow-500" },
-      TypeScript: { logo: "🔷", color: "bg-blue-500" },
-      Python: { logo: "🐍", color: "bg-green-500" },
-      Java: { logo: "☕", color: "bg-red-500" },
-      "C#": { logo: "#️⃣", color: "bg-purple-500" },
-      Go: { logo: "🐹", color: "bg-cyan-500" },
-      Rust: { logo: "🦀", color: "bg-orange-500" },
-      Ruby: { logo: "💎", color: "bg-red-600" },
-      PHP: { logo: "🐘", color: "bg-indigo-500" },
-      Swift: { logo: "🍎", color: "bg-orange-600" },
-      Kotlin: { logo: "🎯", color: "bg-purple-600" },
-      Dart: { logo: "🎯", color: "bg-blue-600" },
-    };
-    return logos[language || ""] || { logo: "💻", color: "bg-gray-500" };
-  };
+
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Trending Repositories</CardTitle>
-          <Button variant="link" className="text-primary hover:text-primary/80 p-0">
-            View All
-          </Button>
+          <CardTitle className="text-lg font-semibold">{t("trending_repos")}</CardTitle>
+          <Link href="/trending">
+            <Button variant="link" className="text-primary hover:text-primary/80 p-0 text-sm">
+              {t("view_all")}
+            </Button>
+          </Link>
         </div>
       </CardHeader>
       <CardContent>
@@ -91,13 +82,10 @@ export default function TrendingRepos({ repositories, isLoading = false }: Trend
                       {repo.full_name}
                     </h4>
                     {repo.language && (
-                      <Badge 
-                        variant="secondary" 
-                        className={`text-xs px-2 py-1 ${getLanguageLogo(repo.language).color} text-white flex items-center space-x-1`}
-                      >
-                        <span>{getLanguageLogo(repo.language).logo}</span>
-                        <span>{repo.language}</span>
-                      </Badge>
+                      <div className="flex items-center space-x-1">
+                        {getLanguageInfo(repo.language).icon}
+                        <span className="text-xs text-muted-foreground">{getLanguageInfo(repo.language).name}</span>
+                      </div>
                     )}
                   </div>
                   <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
