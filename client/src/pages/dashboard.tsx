@@ -141,116 +141,41 @@ export default function Dashboard() {
       <main className="flex-1 p-6 bg-background">
         <div className="max-w-7xl mx-auto space-y-6">
           
-          {/* Quick Stats */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold flex items-center gap-2">
-                  <BarChart3 className="h-6 w-6 text-primary" />
-                  Platform Overview
-                </h2>
-                <p className="text-muted-foreground">Real-time insights into GitHub ecosystem</p>
-              </div>
-              <Link href="/analytics">
-                <Button variant="outline" size="sm" className="hover:bg-primary/10">
-                  View Analytics
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {metricCards.map((card, index) => (
+          {/* Metrics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {metricCards.map((card, index) => {
+              const metricData = (metrics as any)?.find((m: any) => m.metric_type === card.type);
+              return (
                 <MetricCard
                   key={card.type}
                   icon={card.icon}
                   title={card.title}
-                  value={metrics?.find(m => m.metric_type === card.type)?.total || 0}
-                  growth={`+${(Math.random() * 15 + 5).toFixed(1)}%`}
+                  value={metricData?.total || 0}
+                  growth={metricData?.growth_percentage || "+0%"}
                   color={card.color}
                   isLoading={metricsLoading}
                 />
-              ))}
-            </div>
-          </section>
+              );
+            })}
+          </div>
 
-          {/* Activity Overview */}
-          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-primary" />
-                    Weekly Activity Trends
-                    <Badge variant="secondary" className="ml-2">Live</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ActivityChart />
-                </CardContent>
-              </Card>
-            </div>
-            
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    Quick Actions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Link href="/discover">
-                    <Button variant="outline" className="w-full justify-start hover:bg-primary/10">
-                      <Globe className="w-4 h-4 mr-2" />
-                      Discover New Content
-                    </Button>
-                  </Link>
-                  <Link href="/trending">
-                    <Button variant="outline" className="w-full justify-start hover:bg-primary/10">
-                      <TrendingUp className="w-4 h-4 mr-2" />
-                      View Trending
-                    </Button>
-                  </Link>
-                  <Link href="/top">
-                    <Button variant="outline" className="w-full justify-start hover:bg-primary/10">
-                      <Users className="w-4 h-4 mr-2" />
-                      Top Developers
-                    </Button>
-                  </Link>
-                  <Link href="/technologies">
-                    <Button variant="outline" className="w-full justify-start hover:bg-primary/10">
-                      <Code className="w-4 h-4 mr-2" />
-                      Explore Technologies
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Target className="h-5 w-5 text-primary" />
-                    Platform Stats
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Data Sources</span>
-                    <Badge variant="outline">GitHub API</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Update Frequency</span>
-                    <Badge variant="outline">Real-time</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Uptime</span>
-                    <Badge variant="outline" className="text-green-600">99.9%</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </section>
+          {/* Activity Chart */}
+          <Card className="shadow-sm border-border/50">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-primary" />
+                  <CardTitle className="text-base">Activity Trends</CardTitle>
+                </div>
+                <Badge variant="secondary" className="text-xs">
+                  Last 7 Days
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <ActivityChart />
+            </CardContent>
+          </Card>
 
           {/* Three Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -326,6 +251,37 @@ export default function Dashboard() {
             
           </div>
 
+          {/* Quick Actions */}
+          <Card className="shadow-sm border-border/50 bg-gradient-to-r from-primary/5 to-primary/10">
+            <CardContent className="p-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground">Discover More</h3>
+                    <p className="text-xs text-muted-foreground">Explore trending projects and connect with developers</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Link href="/discover">
+                    <Button variant="default" size="sm" className="h-8 text-xs">
+                      <Globe className="w-3 h-3 mr-1" />
+                      Explore
+                    </Button>
+                  </Link>
+                  <Link href="/search">
+                    <Button variant="outline" size="sm" className="h-8 text-xs">
+                      <Search className="w-3 h-3 mr-1" />
+                      Search
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
         </div>
       </main>
     </div>
