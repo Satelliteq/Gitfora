@@ -20,15 +20,15 @@ export default function Dashboard() {
   });
 
   const { data: technologies, isLoading: techLoading } = useQuery({
-    queryKey: ["/api/technologies"],
+    queryKey: ["/api/technologies", { limit: 25 }],
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
-    queryKey: ["/api/repositories/trending"],
+    queryKey: ["/api/repositories/trending", { limit: 30 }],
   });
 
   const { data: risingUsers, isLoading: usersLoading } = useQuery({
-    queryKey: ["/api/users/rising"],
+    queryKey: ["/api/users/rising", { limit: 20 }],
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -135,8 +135,8 @@ export default function Dashboard() {
 
         {/* Data Tables */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TrendingRepos repositories={trendingRepos || []} isLoading={reposLoading} />
-          <RisingUsers users={risingUsers || []} isLoading={usersLoading} />
+          <TrendingRepos repositories={(trendingRepos as any[]) || []} isLoading={reposLoading} />
+          <RisingUsers users={(risingUsers as any[]) || []} isLoading={usersLoading} />
         </div>
       </div>
     </div>

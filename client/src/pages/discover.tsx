@@ -40,7 +40,7 @@ export default function Discover() {
     "python", "javascript", "typescript", "go", "rust", "kotlin", "swift"
   ];
 
-  const filteredRepos = trendingRepos?.filter((repo: any) => {
+  const filteredRepos = (trendingRepos as any[])?.filter((repo: any) => {
     if (searchQuery && !repo.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
         !repo.description?.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
@@ -89,7 +89,7 @@ export default function Discover() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Languages</SelectItem>
-                        {technologies?.slice(0, 20).map((tech: any) => (
+                        {(technologies as any[])?.slice(0, 20).map((tech: any) => (
                           <SelectItem key={tech.name} value={tech.name}>
                             {tech.name}
                           </SelectItem>
@@ -225,7 +225,7 @@ export default function Discover() {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {technologies?.slice(0, 12).map((tech: any) => {
+              {(technologies as any[])?.slice(0, 12).map((tech: any) => {
                 const langInfo = getLanguageInfo(tech.name);
                 return (
                   <Card key={tech.id} className="hover:shadow-md transition-shadow cursor-pointer">
