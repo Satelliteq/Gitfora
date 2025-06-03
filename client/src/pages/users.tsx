@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users, 
   TrendingUp, 
@@ -15,13 +16,26 @@ import {
   Star,
   RefreshCw,
   Calendar,
-  Award
+  Award,
+  Crown,
+  Code,
+  GitFork,
+  Trophy
 } from "lucide-react";
+import { Link } from "wouter";
+import { useLanguage } from "@/contexts/language-context";
+import { getLanguageInfo } from "@/lib/language-logos";
 import type { GithubUser } from "@shared/schema";
 
 export default function Top() {
-  const { data: risingUsers, isLoading, refetch } = useQuery({
+  const { t } = useLanguage();
+
+  const { data: topUsers, isLoading: usersLoading } = useQuery({
     queryKey: ["/api/users/rising", { limit: 30 }],
+  });
+
+  const { data: topRepositories, isLoading: reposLoading } = useQuery({
+    queryKey: ["/api/repositories/trending", { limit: 50 }],
   });
 
   const formatNumber = (num: number) => {
