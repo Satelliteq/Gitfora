@@ -165,7 +165,7 @@ export default function UserSearch() {
                   Search Results
                 </h2>
                 <Badge variant="secondary">
-                  Found: {searchResults.username}
+                  Found: {(searchResults as any).username}
                 </Badge>
               </div>
 
@@ -173,53 +173,60 @@ export default function UserSearch() {
                 <CardContent className="p-6">
                   <div className="flex items-start gap-6">
                     <Avatar className="w-24 h-24">
-                      <AvatarImage src={searchResults.avatar_url} alt={searchResults.name || searchResults.username} />
+                      <AvatarImage src={(searchResults as any).avatar_url} alt={(searchResults as any).name || (searchResults as any).username} />
                       <AvatarFallback className="text-2xl">
-                        {(searchResults.name || searchResults.username)?.charAt(0)?.toUpperCase()}
+                        {((searchResults as any).name || (searchResults as any).username)?.charAt(0)?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-2xl font-bold">{searchResults.name || searchResults.username}</h3>
-                        <Badge variant="outline">@{searchResults.username}</Badge>
+                        <h3 className="text-2xl font-bold">{(searchResults as any).name || (searchResults as any).username}</h3>
+                        <Badge variant="outline">@{(searchResults as any).username}</Badge>
                       </div>
                       
-                      {searchResults.bio && (
-                        <p className="text-muted-foreground mb-4">{searchResults.bio}</p>
+                      {(searchResults as any).bio && (
+                        <p className="text-muted-foreground mb-4">{(searchResults as any).bio}</p>
                       )}
                       
                       <div className="flex items-center gap-6 text-sm text-muted-foreground mb-4">
                         <div className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
-                          <span>{formatNumber(searchResults.followers || 0)} followers</span>
+                          <span>{formatNumber((searchResults as any).followers || 0)} followers</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <BookOpen className="w-4 h-4" />
-                          <span>{searchResults.public_repos || 0} repositories</span>
+                          <span>{(searchResults as any).public_repos || 0} repositories</span>
                         </div>
-                        {searchResults.location && (
+                        {(searchResults as any).location && (
                           <div className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />
-                            <span>{searchResults.location}</span>
+                            <span>{(searchResults as any).location}</span>
                           </div>
                         )}
-                        {searchResults.company && (
+                        {(searchResults as any).company && (
                           <div className="flex items-center gap-1">
                             <Building className="w-4 h-4" />
-                            <span>{searchResults.company}</span>
+                            <span>{(searchResults as any).company}</span>
                           </div>
                         )}
                       </div>
                       
                       <div className="flex gap-3">
-                        <Link href={`/user-details/${searchResults.username}`}>
-                          <Button>
-                            View Profile
-                          </Button>
-                        </Link>
+                        <Button onClick={() => {
+                          // Add user to our database and then navigate
+                          fetch('/api/github/users', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(searchResults)
+                          }).then(() => {
+                            window.location.href = `/user-details/${(searchResults as any).username}`;
+                          });
+                        }}>
+                          View Profile
+                        </Button>
                         <Button variant="outline" asChild>
-                          <a href={searchResults.html_url} target="_blank" rel="noopener noreferrer">
+                          <a href={`https://github.com/${(searchResults as any).username}`} target="_blank" rel="noopener noreferrer">
                             <Github className="w-4 h-4 mr-2" />
                             GitHub Profile
                             <ExternalLink className="w-4 h-4 ml-2" />
