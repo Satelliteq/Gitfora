@@ -66,6 +66,7 @@ const translations = {
     refresh: "Refresh",
     updatedNow: "Updated now",
     results: "results",
+    language: "Language",
   },
   tr: {
     // Navigation
@@ -124,6 +125,7 @@ const translations = {
     refresh: "Yenile",
     updatedNow: "Şimdi güncellendi",
     results: "sonuç",
+    language: "Dil",
   },
 };
 
