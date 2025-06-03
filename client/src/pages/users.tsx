@@ -61,51 +61,70 @@ export default function Top() {
   };
 
   const handleRefresh = () => {
-    refetch();
+    // Refresh functionality can be implemented here
   };
 
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <header className="bg-card border-b border-border px-6 py-4">
+      <header className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-b border-border px-6 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Top GitHub Users</h1>
-            <p className="text-muted-foreground mt-1">Discover influential developers and rising stars</p>
+            <div className="flex items-center gap-3 mb-2">
+              <Crown className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Top Content
+              </h1>
+            </div>
+            <p className="text-muted-foreground">Discover the most influential developers and starred repositories</p>
           </div>
           
           <div className="flex items-center space-x-4">
             <Button 
               onClick={handleRefresh}
               size="sm"
-              className="bg-primary hover:bg-primary/90"
+              variant="outline"
+              className="border-primary/20 hover:bg-primary/10"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
             </Button>
             
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Calendar className="w-4 h-4" />
-              <span>Last updated: 3 min ago</span>
+              <span>Updated 3 min ago</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Users Content */}
-      <div className="flex-1 p-6 space-y-6 overflow-auto">
-        {/* User Rankings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Users className="w-5 h-5" />
-              <span>Rising GitHub Stars</span>
-              <Badge variant="secondary" className="ml-2">
-                {(risingUsers as GithubUser[])?.length || 0} users
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
+      {/* Main Content */}
+      <div className="flex-1 p-6 overflow-auto">
+        <Tabs defaultValue="users" className="space-y-6">
+          <TabsList className="grid grid-cols-2 w-full max-w-md">
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Top Developers
+            </TabsTrigger>
+            <TabsTrigger value="repositories" className="flex items-center gap-2">
+              <Code className="h-4 w-4" />
+              Top Repositories
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="users" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Trophy className="w-5 h-5 text-yellow-500" />
+                  <span>Top GitHub Developers</span>
+                  <Badge variant="secondary" className="ml-2">
+                    {(topUsers as GithubUser[])?.length || 0} developers
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+            {usersLoading ? (
               <div className="space-y-6">
                 {[...Array(8)].map((_, i) => (
                   <Card key={i}>
@@ -136,7 +155,7 @@ export default function Top() {
               </div>
             ) : (
               <div className="space-y-6">
-                {(risingUsers as GithubUser[])?.map((user, index) => {
+                {(topUsers as GithubUser[])?.map((user, index) => {
                   const tier = getUserTier(user.followers || 0);
                   return (
                     <Card key={user.id} className="hover:border-primary/50 transition-colors group">
@@ -238,7 +257,7 @@ export default function Top() {
                   );
                 })}
                 
-                {(!risingUsers || (risingUsers as GithubUser[])?.length === 0) && !isLoading && (
+                {(!topUsers || (topUsers as GithubUser[])?.length === 0) && !usersLoading && (
                   <Card>
                     <CardContent className="p-12 text-center">
                       <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -311,6 +330,80 @@ export default function Top() {
               </div>
             </CardContent>
           </Card>
+            </TabsContent>
+
+            <TabsContent value="repositories" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Star className="w-5 h-5 text-yellow-500" />
+                    <span>Top Repositories</span>
+                    <Badge variant="secondary" className="ml-2">
+                      {(topRepositories as any[])?.length || 0} repositories
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {reposLoading ? (
+                    <div className="space-y-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Card key={i}>
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="h-5 w-48 bg-muted rounded mb-2" />
+                                <div className="h-4 w-32 bg-muted rounded mb-3" />
+                                <div className="h-4 w-full bg-muted rounded" />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {(topRepositories as any[])?.slice(0, 10).map((repo, index) => {
+                        const langInfo = getLanguageInfo(repo.language);
+                        return (
+                          <Card key={repo.id} className="hover:border-primary/50 transition-colors group">
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-sm font-bold text-primary">#{index + 1}</span>
+                                    <h3 className="font-semibold group-hover:text-primary transition-colors">
+                                      {repo.full_name}
+                                    </h3>
+                                    <div className="w-4 h-4">
+                                      {langInfo.icon}
+                                    </div>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                    {repo.description || "No description available"}
+                                  </p>
+                                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                      <Star className="h-4 w-4" />
+                                      <span>{formatNumber(repo.stars || 0)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <GitFork className="h-4 w-4" />
+                                      <span>{formatNumber(repo.forks || 0)}</span>
+                                    </div>
+                                    <Badge variant="secondary">{repo.language}</Badge>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
