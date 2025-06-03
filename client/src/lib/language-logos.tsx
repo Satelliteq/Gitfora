@@ -16,7 +16,6 @@ import {
   SiHtml5,
   SiCss3,
   SiGnubash,
-  SiPowershell,
   SiReact,
   SiVuedotjs,
   SiAngular,
@@ -153,7 +152,7 @@ export const getLanguageInfo = (language: string | null): LanguageInfo => {
       name: "Bash"
     },
     powershell: {
-      icon: <SiPowershell className="w-4 h-4" />,
+      icon: <SiGnubash className="w-4 h-4" />,
       color: "#5391FE",
       bgColor: "bg-blue-500",
       name: "PowerShell"
