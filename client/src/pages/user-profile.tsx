@@ -40,6 +40,38 @@ export default function UserProfile() {
     enabled: !!username
   });
 
+  // Show message if no user data and not loading
+  if (!isLoadingUser && !user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-4 mb-6">
+            <Link href="/search">
+              <Button variant="outline" size="sm">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                {t("search")}
+              </Button>
+            </Link>
+            <h1 className="text-2xl font-bold">{t("userProfile")}</h1>
+          </div>
+          
+          <Card className="max-w-md mx-auto">
+            <CardContent className="p-6 text-center">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-lg font-semibold mb-2">{t("userNotFound")}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Kullanıcı "{username}" bulunamadı. GitHub API token gerekli olabilir.
+              </p>
+              <Link href="/search">
+                <Button>Başka kullanıcı ara</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoadingUser) {
     return (
       <div className="min-h-screen bg-background">

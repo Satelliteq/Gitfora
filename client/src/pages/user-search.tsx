@@ -4,11 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import UserSearchForm from "@/components/search/user-search-form";
 import UserProfileCard from "@/components/search/user-profile-card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/language-context";
+import { ArrowLeft, Search, Users, TrendingUp } from "lucide-react";
 
 export default function UserSearch() {
   const [, setLocation] = useLocation();
   const [searchedUser, setSearchedUser] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   // Get query parameter from URL
   const urlParams = new URLSearchParams(window.location.search);

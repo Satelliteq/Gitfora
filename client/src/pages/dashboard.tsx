@@ -112,7 +112,7 @@ export default function Dashboard() {
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {metricCards.map((card) => {
-            const metric = metrics?.find((m: any) => m.metric_type === card.type);
+            const metric = (metrics as any[])?.find((m: any) => m.metric_type === card.type);
             return (
               <MetricCard
                 key={card.type}
@@ -130,7 +130,7 @@ export default function Dashboard() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ActivityChart />
-          <TechnologyList technologies={technologies || []} isLoading={techLoading} />
+          <TechnologyList technologies={(technologies as any[]) || []} isLoading={techLoading} />
         </div>
 
         {/* Data Tables */}
