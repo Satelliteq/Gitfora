@@ -87,7 +87,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Rising users endpoint
   app.get("/api/users/rising", async (req, res) => {
     try {
-      const users = await storage.getRisingUsers(30);
+      const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string), 10) : 8;
+      const users = await storage.getRisingUsers(limit);
       res.json(users);
     } catch (error) {
       console.error("Error fetching rising users:", error);
