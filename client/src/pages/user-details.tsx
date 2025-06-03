@@ -510,9 +510,9 @@ export default function UserDetails() {
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Community Impact</span>
-                          <span className="font-medium">{Math.min(100, (currentUser.followers || 0) / 100)}%</span>
+                          <span className="font-medium">{Math.min(100, (user.followers || 0) / 100)}%</span>
                         </div>
-                        <Progress value={Math.min(100, (currentUser.followers || 0) / 100)} className="h-2" />
+                        <Progress value={Math.min(100, (user.followers || 0) / 100)} className="h-2" />
                       </div>
                     </CardContent>
                   </Card>
