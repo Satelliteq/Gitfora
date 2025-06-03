@@ -22,8 +22,11 @@ import {
   Code,
   BookOpen
 } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
+import { getLanguageInfo, getAllLanguages } from "@/lib/language-logos";
 
 export default function Discover() {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("repositories");

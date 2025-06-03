@@ -15,18 +15,19 @@ import { useLanguage } from "@/contexts/language-context";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Discover", href: "/discover", icon: Compass },
-  { name: "User Search", href: "/search", icon: Search },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Trending", href: "/trending", icon: TrendingUp },
-  { name: "Technologies", href: "/technologies", icon: Code },
-  { name: "Top Users", href: "/users", icon: Users },
-];
-
 export default function Sidebar() {
   const [location] = useLocation();
+  const { language, setLanguage, t } = useLanguage();
+
+  const navigation = [
+    { key: "dashboard", name: t("dashboard"), href: "/", icon: LayoutDashboard },
+    { key: "discover", name: t("discover"), href: "/discover", icon: Compass },
+    { key: "userSearch", name: t("userSearch"), href: "/search", icon: Search },
+    { key: "analytics", name: t("analytics"), href: "/analytics", icon: BarChart3 },
+    { key: "trending", name: t("trending"), href: "/trending", icon: TrendingUp },
+    { key: "technologies", name: t("technologies"), href: "/technologies", icon: Code },
+    { key: "topUsers", name: t("topUsers"), href: "/users", icon: Users },
+  ];
 
   return (
     <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
@@ -63,6 +64,23 @@ export default function Sidebar() {
           );
         })}
       </nav>
+      
+      {/* Language Switcher */}
+      <div className="p-4 border-t border-sidebar-border">
+        <div className="flex items-center space-x-2 mb-3">
+          <Languages className="w-4 h-4 text-sidebar-foreground" />
+          <span className="text-sm font-medium text-sidebar-foreground">{t("language")}</span>
+        </div>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="w-full bg-sidebar border-sidebar-border">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">🇺🇸 English</SelectItem>
+            <SelectItem value="tr">🇹🇷 Türkçe</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       
       {/* User Profile */}
       <div className="p-4 border-t border-sidebar-border">
