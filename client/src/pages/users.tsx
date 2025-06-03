@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import type { GithubUser } from "@shared/schema";
 
-export default function TopUsers() {
+export default function Top() {
   const { data: risingUsers, isLoading, refetch } = useQuery({
     queryKey: ["/api/users/rising", { limit: 30 }],
   });
