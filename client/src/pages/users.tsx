@@ -124,287 +124,171 @@ export default function Top() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-            {usersLoading ? (
-              <div className="space-y-6">
-                {[...Array(8)].map((_, i) => (
-                  <Card key={i}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <Skeleton className="w-8 h-8" />
-                        <Skeleton className="w-16 h-16 rounded-full" />
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <Skeleton className="w-32 h-5" />
-                            <Skeleton className="w-20 h-6" />
-                          </div>
-                          <Skeleton className="w-24 h-4 mb-2" />
+                {usersLoading ? (
+                  <div className="space-y-6">
+                    {[...Array(5)].map((_, i) => (
+                      <Card key={i}>
+                        <CardContent className="p-6">
                           <div className="flex items-center space-x-4">
-                            <Skeleton className="w-16 h-4" />
-                            <Skeleton className="w-16 h-4" />
-                            <Skeleton className="w-20 h-4" />
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Skeleton className="w-16 h-6 mb-1" />
-                          <Skeleton className="w-20 h-4" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {(topUsers as GithubUser[])?.map((user, index) => {
-                  const tier = getUserTier(user.followers || 0);
-                  return (
-                    <Card key={user.id} className="hover:border-primary/50 transition-colors group">
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center">
-                            <div className="text-lg font-bold text-primary w-8">
-                              #{index + 1}
-                            </div>
-                            <div className="relative">
-                              <Avatar className="w-16 h-16">
-                                <AvatarImage src={user.avatar_url || ''} alt={user.username} />
-                                <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-                                  {user.username.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-card flex items-center justify-center">
-                                <span className="text-xs">🔥</span>
-                              </div>
+                            <Skeleton className="w-8 h-8" />
+                            <Skeleton className="w-16 h-16 rounded-full" />
+                            <div className="flex-1">
+                              <Skeleton className="w-32 h-5 mb-2" />
+                              <Skeleton className="w-24 h-4 mb-2" />
+                              <Skeleton className="w-16 h-4" />
                             </div>
                           </div>
-                          
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                                {user.name || user.username}
-                              </h3>
-                              <Badge 
-                                variant="secondary" 
-                                className={`${tier.color} text-white text-xs px-2 py-1`}
-                              >
-                                <span className="mr-1">{tier.icon}</span>
-                                {tier.tier}
-                              </Badge>
-                              <div className="flex items-center space-x-1 text-green-400 text-sm">
-                                <TrendingUp className="w-3 h-3" />
-                                <span>{getGrowthPercentage()}</span>
-                              </div>
-                            </div>
-                            
-                            <p className="text-sm text-muted-foreground mb-2">@{user.username}</p>
-                            
-                            {user.bio && (
-                              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{user.bio}</p>
-                            )}
-                            
-                            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                              <div className="flex items-center space-x-1">
-                                <Users className="w-4 h-4" />
-                                <span className="font-medium">{formatNumber(user.followers || 0)}</span>
-                                <span>followers</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <UserPlus className="w-4 h-4" />
-                                <span className="font-medium">{formatNumber(user.following || 0)}</span>
-                                <span>following</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <BookOpen className="w-4 h-4" />
-                                <span className="font-medium">{formatNumber(user.public_repos || 0)}</span>
-                                <span>repos</span>
-                              </div>
-                              {user.location && (
-                                <div className="flex items-center space-x-1">
-                                  <MapPin className="w-4 h-4" />
-                                  <span>{user.location}</span>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {(topUsers as GithubUser[])?.slice(0, 10).map((user, index) => {
+                      const tier = getUserTier(user.followers || 0);
+                      return (
+                        <Link key={user.id} href={`/user-details/${user.username}`}>
+                          <Card className="hover:border-primary/50 transition-colors group cursor-pointer">
+                            <CardContent className="p-6">
+                              <div className="flex items-center space-x-4">
+                                <div className="flex items-center">
+                                  <div className="text-lg font-bold text-primary w-8">
+                                    #{index + 1}
+                                  </div>
+                                  <div className="relative">
+                                    <Avatar className="w-16 h-16">
+                                      <AvatarImage src={user.avatar_url || ''} alt={user.name || user.username} />
+                                      <AvatarFallback className="text-lg">
+                                        {(user.name || user.username)?.charAt(0)?.toUpperCase()}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  </div>
                                 </div>
-                              )}
-                              {user.company && (
-                                <div className="flex items-center space-x-1">
-                                  <Building className="w-4 h-4" />
-                                  <span>{user.company}</span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={() => window.open(`https://github.com/${user.username}`, '_blank')}
-                            >
-                              View Profile
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={() => window.open(`https://github.com/${user.username}`, '_blank')}
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-                
-                {(!topUsers || (topUsers as GithubUser[])?.length === 0) && !usersLoading && (
-                  <Card>
-                    <CardContent className="p-12 text-center">
-                      <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">No users found</h3>
-                      <p className="text-muted-foreground">
-                        Check back later for trending GitHub users and rising stars.
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* User Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Users</p>
-                  <p className="text-2xl font-bold">
-                    {(risingUsers as GithubUser[])?.length || 0}
-                  </p>
-                </div>
-                <Users className="w-8 h-8 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Followers</p>
-                  <p className="text-2xl font-bold">
-                    {formatNumber((risingUsers as GithubUser[])?.reduce((acc, user) => acc + (user.followers || 0), 0) || 0)}
-                  </p>
-                </div>
-                <TrendingUp className="w-8 h-8 text-green-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Repositories</p>
-                  <p className="text-2xl font-bold">
-                    {formatNumber((risingUsers as GithubUser[])?.reduce((acc, user) => acc + (user.public_repos || 0), 0) || 0)}
-                  </p>
-                </div>
-                <BookOpen className="w-8 h-8 text-blue-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Elite Users</p>
-                  <p className="text-2xl font-bold">
-                    {(risingUsers as GithubUser[])?.filter(user => (user.followers || 0) >= 100000).length || 0}
-                  </p>
-                </div>
-                <Award className="w-8 h-8 text-purple-400" />
-              </div>
-            </CardContent>
-          </Card>
-            </TabsContent>
-
-            <TabsContent value="repositories" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Star className="w-5 h-5 text-yellow-500" />
-                    <span>Top Repositories</span>
-                    <Badge variant="secondary" className="ml-2">
-                      {(topRepositories as any[])?.length || 0} repositories
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {reposLoading ? (
-                    <div className="space-y-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Card key={i}>
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="h-5 w-48 bg-muted rounded mb-2" />
-                                <div className="h-4 w-32 bg-muted rounded mb-3" />
-                                <div className="h-4 w-full bg-muted rounded" />
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {(topRepositories as any[])?.slice(0, 10).map((repo, index) => {
-                        const langInfo = getLanguageInfo(repo.language);
-                        return (
-                          <Card key={repo.id} className="hover:border-primary/50 transition-colors group">
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-sm font-bold text-primary">#{index + 1}</span>
-                                    <h3 className="font-semibold group-hover:text-primary transition-colors">
-                                      {repo.full_name}
+                                
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center space-x-3 mb-2">
+                                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                                      {user.name || user.username}
                                     </h3>
-                                    <div className="w-4 h-4">
-                                      {langInfo.icon}
+                                    <Badge className={`${tier.color} text-white text-xs`}>
+                                      <span className="mr-1">{tier.icon}</span>
+                                      {tier.tier}
+                                    </Badge>
+                                    <div className="flex items-center space-x-1 text-green-400 text-sm">
+                                      <TrendingUp className="w-3 h-3" />
+                                      <span>{getGrowthPercentage()}</span>
                                     </div>
                                   </div>
-                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                                    {repo.description || "No description available"}
-                                  </p>
-                                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                    <div className="flex items-center gap-1">
-                                      <Star className="h-4 w-4" />
-                                      <span>{formatNumber(repo.stars || 0)}</span>
+                                  
+                                  <p className="text-sm text-muted-foreground mb-2">@{user.username}</p>
+                                  
+                                  {user.bio && (
+                                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{user.bio}</p>
+                                  )}
+                                  
+                                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                                    <div className="flex items-center space-x-1">
+                                      <Users className="w-4 h-4" />
+                                      <span className="font-medium">{formatNumber(user.followers || 0)}</span>
+                                      <span>followers</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                      <GitFork className="h-4 w-4" />
-                                      <span>{formatNumber(repo.forks || 0)}</span>
+                                    <div className="flex items-center space-x-1">
+                                      <BookOpen className="w-4 h-4" />
+                                      <span className="font-medium">{formatNumber(user.public_repos || 0)}</span>
+                                      <span>repos</span>
                                     </div>
-                                    <Badge variant="secondary">{repo.language}</Badge>
+                                    {user.location && (
+                                      <div className="flex items-center space-x-1">
+                                        <MapPin className="w-4 h-4" />
+                                        <span>{user.location}</span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>
                             </CardContent>
                           </Card>
-                        );
-                      })}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="repositories" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  <span>Top Repositories</span>
+                  <Badge variant="secondary" className="ml-2">
+                    {(topRepositories as any[])?.length || 0} repositories
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {reposLoading ? (
+                  <div className="space-y-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Card key={i}>
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="h-5 w-48 bg-muted rounded mb-2" />
+                              <div className="h-4 w-32 bg-muted rounded mb-3" />
+                              <div className="h-4 w-full bg-muted rounded" />
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(topRepositories as any[])?.slice(0, 10).map((repo, index) => {
+                      const langInfo = getLanguageInfo(repo.language);
+                      return (
+                        <Card key={repo.id} className="hover:border-primary/50 transition-colors group">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-sm font-bold text-primary">#{index + 1}</span>
+                                  <h3 className="font-semibold group-hover:text-primary transition-colors">
+                                    {repo.full_name}
+                                  </h3>
+                                  <div className="w-4 h-4">
+                                    {langInfo.icon}
+                                  </div>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                  {repo.description || "No description available"}
+                                </p>
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Star className="h-4 w-4" />
+                                    <span>{formatNumber(repo.stars || 0)}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <GitFork className="h-4 w-4" />
+                                    <span>{formatNumber(repo.forks || 0)}</span>
+                                  </div>
+                                  <Badge variant="secondary">{repo.language}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
