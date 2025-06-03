@@ -39,15 +39,15 @@ export default function Dashboard() {
   });
 
   const { data: technologies, isLoading: techLoading } = useQuery({
-    queryKey: ["/api/technologies", { limit: 6 }],
+    queryKey: ["/api/technologies", { limit: 8 }],
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
-    queryKey: ["/api/repositories/trending", { limit: 10 }],
+    queryKey: ["/api/repositories/trending", { limit: 6 }],
   });
 
   const { data: risingUsers, isLoading: usersLoading } = useQuery({
-    queryKey: ["/api/users/rising", { limit: 5 }],
+    queryKey: ["/api/users/rising", { limit: 4 }],
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -91,55 +91,46 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col h-full">
       {/* Modern Header */}
-      <header className="bg-gradient-to-br from-primary/20 via-primary/10 to-background border-b border-border px-6 py-8">
+      <header className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-b border-border px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-                  <Github className="w-6 h-6 text-primary-foreground" />
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                  <Github className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                    Welcome to Gitfora
-                  </h1>
-                  <p className="text-muted-foreground">
-                    Your comprehensive GitHub analytics dashboard
-                  </p>
+                  <h1 className="text-2xl font-bold text-foreground">GitHub Analytics</h1>
+                  <p className="text-sm text-muted-foreground">Real-time developer insights</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>Last updated: 2 minutes ago</span>
+                  <Clock className="w-3 h-3" />
+                  <span>Updated {new Date().toLocaleTimeString()}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Activity className="w-4 h-4" />
-                  <span>Live data sync</span>
-                </div>
+                <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1" />
+                  Live
+                </Badge>
               </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <form onSubmit={handleSearch} className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            
+            <div className="flex gap-2">
+              <form onSubmit={handleSearch} className="flex gap-2">
                 <Input
-                  placeholder="Search developers, repos..."
+                  placeholder="Search developers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-80 bg-background/60 backdrop-blur-sm border-primary/20 focus:border-primary/40"
+                  className="w-48 h-9 text-sm"
                 />
+                <Button type="submit" size="sm" className="h-9">
+                  <Search className="w-4 h-4" />
+                </Button>
               </form>
-              
-              <Button 
-                onClick={handleRefresh}
-                size="sm"
-                variant="outline"
-                className="border-primary/20 hover:bg-primary/10 backdrop-blur-sm"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
+              <Button onClick={handleRefresh} variant="outline" size="sm" className="h-9">
+                <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
           </div>
