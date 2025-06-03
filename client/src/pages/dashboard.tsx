@@ -20,15 +20,15 @@ export default function Dashboard() {
   });
 
   const { data: technologies, isLoading: techLoading } = useQuery({
-    queryKey: ["/api/technologies", { limit: 25 }],
+    queryKey: ["/api/technologies", { limit: 10 }],
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
-    queryKey: ["/api/repositories/trending", { limit: 30 }],
+    queryKey: ["/api/repositories/trending", { limit: 8 }],
   });
 
   const { data: risingUsers, isLoading: usersLoading } = useQuery({
-    queryKey: ["/api/users/rising", { limit: 20 }],
+    queryKey: ["/api/users/rising", { limit: 8 }],
   });
 
   const handleSearch = (e: React.FormEvent) => {

@@ -25,19 +25,22 @@ export default function UserProfile() {
   const { username } = useParams();
   const { t } = useLanguage();
 
-  const { data: user, isLoading: isLoadingUser } = useQuery({
+  const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ["/api/github/user", username],
-    enabled: !!username
+    enabled: !!username,
+    retry: 1
   });
 
   const { data: repositories, isLoading: isLoadingRepos } = useQuery({
     queryKey: ["/api/github/user/repositories", username],
-    enabled: !!username
+    enabled: !!username && !!user,
+    retry: 1
   });
 
   const { data: analytics, isLoading: isLoadingAnalytics } = useQuery({
     queryKey: ["/api/github/user/analytics", username],
-    enabled: !!username
+    enabled: !!username && !!user,
+    retry: 1
   });
 
   // Show message if no user data and not loading
@@ -130,20 +133,23 @@ export default function UserProfile() {
     return { tier: "Developer", color: "bg-gray-500" };
   };
 
-  const topLanguages = repositories?.reduce((acc: Record<string, number>, repo: any) => {
+  const userRepos = (repositories as any[]) || [];
+  const userData = (user as any) || {};
+  
+  const topLanguages = userRepos.reduce((acc: Record<string, number>, repo: any) => {
     if (repo.language) {
       acc[repo.language] = (acc[repo.language] || 0) + 1;
     }
     return acc;
-  }, {}) || {};
+  }, {});
 
   const sortedLanguages = Object.entries(topLanguages)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (b as number) - (a as number))
     .slice(0, 5);
 
-  const totalStars = repositories?.reduce((sum: number, repo: any) => sum + (repo.stargazers_count || 0), 0) || 0;
-  const totalForks = repositories?.reduce((sum: number, repo: any) => sum + (repo.forks_count || 0), 0) || 0;
-  const developerTier = getDeveloperTier(user.followers || 0, user.public_repos || 0);
+  const totalStars = userRepos.reduce((sum: number, repo: any) => sum + (repo.stargazers_count || 0), 0);
+  const totalForks = userRepos.reduce((sum: number, repo: any) => sum + (repo.forks_count || 0), 0);
+  const developerTier = getDeveloperTier(userData.followers || 0, userData.public_repos || 0);
 
   return (
     <div className="min-h-screen bg-background">

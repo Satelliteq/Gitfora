@@ -21,7 +21,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Top technologies endpoint
   app.get("/api/technologies", async (req, res) => {
     try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
       const technologies = await storage.getTopTechnologies(limit);
       res.json(technologies);
     } catch (error) {
@@ -33,7 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Trending repositories endpoint
   app.get("/api/repositories/trending", async (req, res) => {
     try {
-      let repositories = await storage.getTrendingRepositories(10);
+      let repositories = await storage.getTrendingRepositories(50);
       
       // If no repositories in storage, fetch from GitHub API
       if (repositories.length === 0 && GITHUB_TOKEN) {
@@ -86,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Rising users endpoint
   app.get("/api/users/rising", async (req, res) => {
     try {
-      const users = await storage.getRisingUsers(10);
+      const users = await storage.getRisingUsers(30);
       res.json(users);
     } catch (error) {
       console.error("Error fetching rising users:", error);
