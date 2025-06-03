@@ -262,19 +262,18 @@ export default function Dashboard() {
           </section>
 
           {/* Content Sections */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Trending Repositories */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Star className="h-5 w-5 text-yellow-500" />
-                    Trending Repositories
+                    Hot Repositories
                   </div>
                   <Link href="/trending">
                     <Button variant="ghost" size="sm">
-                      View All
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
                 </CardTitle>
@@ -290,12 +289,11 @@ export default function Dashboard() {
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-green-500" />
-                    Rising Developers
+                    Top Developers
                   </div>
                   <Link href="/top">
                     <Button variant="ghost" size="sm">
-                      View All
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
                 </CardTitle>
@@ -304,21 +302,18 @@ export default function Dashboard() {
                 <RisingUsers users={risingUsers} isLoading={usersLoading} />
               </CardContent>
             </Card>
-          </section>
 
-          {/* Technologies Section */}
-          <section>
+            {/* Technologies */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Code className="h-5 w-5 text-blue-500" />
-                    Popular Technologies
+                    Tech Stack
                   </div>
                   <Link href="/technologies">
                     <Button variant="ghost" size="sm">
-                      Explore All
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
                 </CardTitle>
