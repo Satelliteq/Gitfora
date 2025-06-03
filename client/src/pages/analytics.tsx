@@ -28,7 +28,7 @@ import {
   Code, 
   Database, 
   Globe, 
-  Smartphone as Mobile, 
+  Smartphone, 
   Shield, 
   BarChart3,
   TrendingUp,
@@ -233,7 +233,7 @@ export default function Analytics() {
                         <div className="flex items-center justify-center mb-2">
                           {field.field.includes('AI') && <Brain className="h-4 w-4 mr-1" />}
                           {field.field.includes('Web') && <Globe className="h-4 w-4 mr-1" />}
-                          {field.field.includes('Mobile') && <Mobile className="h-4 w-4 mr-1" />}
+                          {field.field.includes('Mobile') && <Smartphone className="h-4 w-4 mr-1" />}
                           {field.field.includes('Security') && <Shield className="h-4 w-4 mr-1" />}
                           {field.field.includes('Data') && <BarChart3 className="h-4 w-4 mr-1" />}
                           {!field.field.includes('AI') && !field.field.includes('Web') && !field.field.includes('Mobile') && !field.field.includes('Security') && !field.field.includes('Data') && <Code className="h-4 w-4 mr-1" />}
@@ -255,7 +255,7 @@ export default function Analytics() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Total Technologies</p>
-                        <p className="text-2xl font-bold">{technologies?.length || 0}</p>
+                        <p className="text-2xl font-bold">{(technologies as any[])?.length || 0}</p>
                       </div>
                       <Code className="h-8 w-8 text-blue-500" />
                     </div>
@@ -267,7 +267,7 @@ export default function Analytics() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Active Repositories</p>
-                        <p className="text-2xl font-bold">{repositories?.length || 0}</p>
+                        <p className="text-2xl font-bold">{(repositories as any[])?.length || 0}</p>
                       </div>
                       <GitBranch className="h-8 w-8 text-green-500" />
                     </div>
@@ -279,7 +279,7 @@ export default function Analytics() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Rising Developers</p>
-                        <p className="text-2xl font-bold">{users?.length || 0}</p>
+                        <p className="text-2xl font-bold">{(users as any[])?.length || 0}</p>
                       </div>
                       <Users className="h-8 w-8 text-purple-500" />
                     </div>
