@@ -43,7 +43,7 @@ export default function Dashboard() {
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
-    queryKey: ["/api/repositories/trending", { limit: 10 }],
+    queryKey: ["/api/repositories/trending", { limit: 5 }],
   });
 
   const { data: risingUsers, isLoading: usersLoading } = useQuery({
@@ -252,68 +252,79 @@ export default function Dashboard() {
             </div>
           </section>
 
-          {/* Content Sections */}
-          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Trending Repositories */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+          {/* Three Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            {/* Hot Repositories */}
+            <Card className="shadow-sm border-border/50">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Star className="h-5 w-5 text-yellow-500" />
-                    Hot Repositories
+                    <TrendingUp className="h-4 w-4 text-green-500" />
+                    <CardTitle className="text-base">Hot Repositories</CardTitle>
                   </div>
                   <Link href="/trending">
-                    <Button variant="ghost" size="sm">
-                      <ArrowRight className="w-4 h-4" />
+                    <Button variant="ghost" size="sm" className="text-xs h-7">
+                      View All <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>
-                </CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
-                <TrendingRepos repositories={trendingRepos} isLoading={reposLoading} />
+              <CardContent className="pt-0">
+                <TrendingRepos 
+                  repositories={trendingRepos as any || []} 
+                  isLoading={reposLoading} 
+                />
               </CardContent>
             </Card>
 
-            {/* Rising Users */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+            {/* Top Developers */}
+            <Card className="shadow-sm border-border/50">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-green-500" />
-                    Top Developers
+                    <Users className="h-4 w-4 text-blue-500" />
+                    <CardTitle className="text-base">Top Developers</CardTitle>
                   </div>
                   <Link href="/top">
-                    <Button variant="ghost" size="sm">
-                      <ArrowRight className="w-4 h-4" />
+                    <Button variant="ghost" size="sm" className="text-xs h-7">
+                      View All <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>
-                </CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
-                <RisingUsers users={risingUsers} isLoading={usersLoading} />
+              <CardContent className="pt-0">
+                <RisingUsers 
+                  users={risingUsers as any || []} 
+                  isLoading={usersLoading} 
+                />
               </CardContent>
             </Card>
 
-            {/* Technologies */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+            {/* Tech Stack */}
+            <Card className="shadow-sm border-border/50">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Code className="h-5 w-5 text-blue-500" />
-                    Tech Stack
+                    <Code className="h-4 w-4 text-purple-500" />
+                    <CardTitle className="text-base">Tech Stack</CardTitle>
                   </div>
                   <Link href="/technologies">
-                    <Button variant="ghost" size="sm">
-                      <ArrowRight className="w-4 h-4" />
+                    <Button variant="ghost" size="sm" className="text-xs h-7">
+                      View All <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>
-                </CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
-                <TechnologyList technologies={technologies} isLoading={techLoading} />
+              <CardContent className="pt-0">
+                <TechnologyList 
+                  technologies={technologies as any || []} 
+                  isLoading={techLoading} 
+                />
               </CardContent>
             </Card>
-          </section>
+            
+          </div>
 
         </div>
       </main>
