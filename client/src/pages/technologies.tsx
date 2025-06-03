@@ -4,42 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Code, TrendingUp, Star, GitFork, RefreshCw, Calendar } from "lucide-react";
+import { Code, TrendingUp, Star, GitFork, RefreshCw, Calendar, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
+import { getLanguageInfo } from "@/lib/language-logos";
 import type { Technology } from "@shared/schema";
 
 export default function Technologies() {
+  const { t } = useLanguage();
+  
   const { data: technologies, isLoading, refetch } = useQuery({
-    queryKey: ["/api/technologies", { limit: 20 }],
+    queryKey: ["/api/technologies", { limit: 50 }],
   });
 
   const { data: trendingRepos, isLoading: reposLoading } = useQuery({
     queryKey: ["/api/repositories/trending"],
   });
 
-  const getTechnologyIcon = (name: string) => {
-    const icons: Record<string, string> = {
-      JavaScript: "🟨",
-      Python: "🐍", 
-      TypeScript: "🔷",
-      Java: "☕",
-      "C#": "#️⃣",
-      React: "⚛️",
-      Vue: "💚",
-      Angular: "🅰️",
-      Node: "💚",
-      Go: "🐹",
-      Rust: "🦀",
-      Ruby: "💎",
-      PHP: "🐘",
-      Swift: "🍎",
-      Kotlin: "🎯",
-      Dart: "🎯",
-      Flutter: "💙",
-      Docker: "🐳",
-      Kubernetes: "☸️",
-    };
-    return icons[name] || "💻";
-  };
+
 
   const getLanguageRepos = (language: string) => {
     return (trendingRepos as any)?.filter((repo: any) => 
@@ -128,13 +109,8 @@ export default function Technologies() {
                         <div className="text-lg font-bold text-primary w-8">
                           #{index + 1}
                         </div>
-                        <div 
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-                          style={{ backgroundColor: tech.color || "#8B5CF6" }}
-                        >
-                          <span role="img" aria-label={tech.name}>
-                            {getTechnologyIcon(tech.name)}
-                          </span>
+                        <div className="w-10 h-10 flex items-center justify-center">
+                          {getLanguageInfo(tech.name).icon}
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-foreground">{tech.name}</h3>
@@ -177,13 +153,8 @@ export default function Technologies() {
               <Card key={tech.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <div 
-                      className="w-6 h-6 rounded flex items-center justify-center text-sm"
-                      style={{ backgroundColor: tech.color || "#8B5CF6" }}
-                    >
-                      <span role="img" aria-label={tech.name}>
-                        {getTechnologyIcon(tech.name)}
-                      </span>
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      {getLanguageInfo(tech.name).icon}
                     </div>
                     <span>Trending {tech.name} Repos</span>
                   </CardTitle>

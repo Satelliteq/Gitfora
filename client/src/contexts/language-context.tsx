@@ -54,7 +54,7 @@ const translations = {
     
     // Common
     followers: "followers",
-    following: "following",
+    following: "following", 
     repos: "repositories",
     activity: "activity",
     stars: "stars",
@@ -67,6 +67,13 @@ const translations = {
     updatedNow: "Updated now",
     results: "results",
     language: "Language",
+    viewAll: "View All",
+    
+    // Dashboard components
+    trending_repos: "Trending Repositories",
+    rising_users: "Rising GitHub Users", 
+    top_technologies: "Top Technologies",
+    view_all: "View All",
   },
   tr: {
     // Navigation
@@ -126,6 +133,13 @@ const translations = {
     updatedNow: "Şimdi güncellendi",
     results: "sonuç",
     language: "Dil",
+    viewAll: "Tümünü Görüntüle",
+    
+    // Dashboard components
+    trending_repos: "Trend Depolar",
+    rising_users: "Yükselen GitHub Kullanıcıları",
+    top_technologies: "En Popüler Teknolojiler",
+    view_all: "Tümünü Görüntüle",
   },
 };
 
