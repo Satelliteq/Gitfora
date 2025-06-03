@@ -5,15 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Star, GitFork, TrendingUp, ExternalLink, Eye, Calendar, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useLanguage } from "@/contexts/language-context";
+import { getLanguageInfo } from "@/lib/language-logos";
 
 export default function Trending() {
   const [language, setLanguage] = useState("all");
   const [timeRange, setTimeRange] = useState("today");
+  const { t } = useLanguage();
 
   const { data: trendingRepos, isLoading: reposLoading, refetch } = useQuery({
-    queryKey: ["/api/repositories/trending"],
+    queryKey: ["/api/repositories/trending", { limit: 50 }],
   });
+
+  // Filter repositories based on selected language
+  const filteredRepos = useMemo(() => {
+    const repos = (trendingRepos as any[]) || [];
+    if (language === "all") return repos;
+    
+    return repos.filter((repo: any) => 
+      repo.language && repo.language.toLowerCase() === language.toLowerCase()
+    );
+  }, [trendingRepos, language]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
@@ -135,7 +148,13 @@ export default function Trending() {
             </div>
           ) : (
             <div className="space-y-6">
-              {(trendingRepos as any)?.map((repo: any, index: number) => (
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-sm text-muted-foreground">
+                  Showing {filteredRepos.length} of {(trendingRepos as any[])?.length || 0} repositories
+                  {language !== "all" && ` for ${language}`}
+                </p>
+              </div>
+              {filteredRepos?.map((repo: any, index: number) => (
                 <Card key={repo.id} className="hover:border-primary/50 transition-colors group">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">

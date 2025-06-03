@@ -21,7 +21,7 @@ import type { GithubUser } from "@shared/schema";
 
 export default function TopUsers() {
   const { data: risingUsers, isLoading, refetch } = useQuery({
-    queryKey: ["/api/users/rising"],
+    queryKey: ["/api/users/rising", { limit: 30 }],
   });
 
   const formatNumber = (num: number) => {
