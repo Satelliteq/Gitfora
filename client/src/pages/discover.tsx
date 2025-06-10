@@ -45,7 +45,8 @@ export default function Discover() {
     queryKey: ["/api/technologies", { limit: 20 }],
   });
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | null | undefined) => {
+    if (typeof num !== "number" || isNaN(num)) return "0";
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + "M";
     }
@@ -55,6 +56,10 @@ export default function Discover() {
     return num.toLocaleString();
   };
 
+  const devCount = Array.isArray(featuredUsers) ? featuredUsers.length : 0;
+  const repoCount = Array.isArray(trendingRepos) ? trendingRepos.length : 0;
+  const techCount = Array.isArray(technologies) ? technologies.length : 0;
+
   const collections = [
     {
       id: 1,
@@ -62,7 +67,7 @@ export default function Discover() {
       description: "Developers gaining momentum in the community",
       icon: <Rocket className="w-6 h-6" />,
       color: "from-orange-500 to-red-500",
-      count: 25,
+      count: devCount,
       category: "users"
     },
     {
@@ -71,7 +76,7 @@ export default function Discover() {
       description: "Repositories with explosive growth this week",
       icon: <TrendingUp className="w-6 h-6" />,
       color: "from-green-500 to-emerald-500",
-      count: 50,
+      count: repoCount,
       category: "repos"
     },
     {
@@ -80,7 +85,7 @@ export default function Discover() {
       description: "Leading contributors in cutting-edge technologies",
       icon: <Zap className="w-6 h-6" />,
       color: "from-blue-500 to-cyan-500",
-      count: 30,
+      count: devCount,
       category: "users"
     },
     {
@@ -89,7 +94,7 @@ export default function Discover() {
       description: "Programming languages dominating the scene",
       icon: <Code className="w-6 h-6" />,
       color: "from-purple-500 to-pink-500",
-      count: 15,
+      count: techCount,
       category: "tech"
     }
   ];
@@ -123,19 +128,19 @@ export default function Discover() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">50K+</div>
+              <div className="text-2xl font-bold text-primary">{formatNumber(devCount)}</div>
               <div className="text-sm text-muted-foreground">Developers</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">125K+</div>
+              <div className="text-2xl font-bold text-primary">{formatNumber(repoCount)}</div>
               <div className="text-sm text-muted-foreground">Repositories</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">200+</div>
+              <div className="text-2xl font-bold text-primary">{formatNumber(techCount)}</div>
               <div className="text-sm text-muted-foreground">Technologies</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">1M+</div>
+              <div className="text-2xl font-bold text-primary">-</div>
               <div className="text-sm text-muted-foreground">Stars Given</div>
             </div>
           </div>

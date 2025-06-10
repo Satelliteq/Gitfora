@@ -70,22 +70,33 @@ export default function Analytics() {
     queryKey: ["/api/technologies", { limit: 50 }]
   });
 
-  // Generate analytics data
-  const languageData = technologies?.slice(0, 10).map((tech: any, index: number) => ({
-    name: tech.name,
-    popularity: Math.floor(Math.random() * 100) + 1,
-    growth: Math.floor(Math.random() * 50) + 10,
-    repos: Math.floor(Math.random() * 10000) + 1000,
-    developers: Math.floor(Math.random() * 50000) + 5000
-  })) || [];
+  // API'den gelen verileri dizi olarak varsay
+  const repoArray = Array.isArray(repositories) ? repositories : [];
+  const userArray = Array.isArray(users) ? users : [];
+  const techArray = Array.isArray(technologies) ? technologies : [];
 
-  const trendData = Array.from({ length: 12 }, (_, i) => ({
-    month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
-    repositories: Math.floor(Math.random() * 1000) + 500,
-    developers: Math.floor(Math.random() * 500) + 200,
-    stars: Math.floor(Math.random() * 5000) + 1000
-  }));
+  // Gerçek verilerle languageData oluştur
+  const languageData = techArray.map((tech: any) => {
+    return {
+      name: tech.name,
+      popularity: tech.percentage || 0,
+      growth: tech.growth_percentage ? parseFloat(tech.growth_percentage) : null,
+      repos: tech.repos_count || 0,
+      developers: tech.developers || null
+    };
+  });
 
+  // Gerçek verilerle trendData oluştur
+  const trendData = [
+    {
+      month: "Toplam",
+      repositories: repoArray.length,
+      developers: userArray.length,
+      stars: repoArray.reduce((acc: number, repo: any) => acc + (repo.stars || 0), 0)
+    }
+  ];
+
+  // Yazılım alanı trendleri (sabit veri)
   const fieldTrends = [
     { field: "Frontend", value: 85, color: "#3B82F6" },
     { field: "Backend", value: 78, color: "#10B981" },
@@ -95,22 +106,10 @@ export default function Analytics() {
     { field: "AI/ML", value: 82, color: "#06B6D4" }
   ];
 
-  const contributionData = [
-    { category: "Open Source", value: 45, color: "#10B981" },
-    { category: "Enterprise", value: 35, color: "#3B82F6" },
-    { category: "Personal", value: 20, color: "#8B5CF6" }
-  ];
+  // Radar chart için de backend'den veri gelmiyorsa, bu bölümü kaldır veya sadeleştir
 
-  const radarData = [
-    { subject: 'Performance', A: 120, B: 110, fullMark: 150 },
-    { subject: 'Scalability', A: 98, B: 130, fullMark: 150 },
-    { subject: 'Security', A: 86, B: 130, fullMark: 150 },
-    { subject: 'Developer Experience', A: 99, B: 100, fullMark: 150 },
-    { subject: 'Community', A: 85, B: 90, fullMark: 150 },
-    { subject: 'Innovation', A: 65, B: 85, fullMark: 150 }
-  ];
-
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | null | undefined) => {
+    if (typeof num !== "number" || isNaN(num)) return "0";
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + "M";
     }
@@ -192,11 +191,7 @@ export default function Analytics() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Total Repositories</p>
                       <p className="text-3xl font-bold text-blue-600">
-                        {formatNumber(repositories?.length * 1000 || 125000)}
-                      </p>
-                      <p className="text-sm text-green-600 flex items-center gap-1 mt-2">
-                        <TrendingUp className="w-3 h-3" />
-                        +12.5% from last month
+                        {formatNumber(repoArray.length)}
                       </p>
                     </div>
                     <Globe className="w-12 h-12 text-blue-500" />
@@ -210,11 +205,7 @@ export default function Analytics() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Active Developers</p>
                       <p className="text-3xl font-bold text-green-600">
-                        {formatNumber(users?.length * 2000 || 50000)}
-                      </p>
-                      <p className="text-sm text-green-600 flex items-center gap-1 mt-2">
-                        <TrendingUp className="w-3 h-3" />
-                        +8.3% from last month
+                        {formatNumber(userArray.length)}
                       </p>
                     </div>
                     <Users className="w-12 h-12 text-green-500" />
@@ -228,11 +219,7 @@ export default function Analytics() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Technologies</p>
                       <p className="text-3xl font-bold text-purple-600">
-                        {technologies?.length || 200}+
-                      </p>
-                      <p className="text-sm text-green-600 flex items-center gap-1 mt-2">
-                        <TrendingUp className="w-3 h-3" />
-                        +15.2% from last month
+                        {techArray.length}
                       </p>
                     </div>
                     <Code className="w-12 h-12 text-purple-500" />
@@ -245,10 +232,8 @@ export default function Analytics() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Total Stars</p>
-                      <p className="text-3xl font-bold text-orange-600">2.8M+</p>
-                      <p className="text-sm text-green-600 flex items-center gap-1 mt-2">
-                        <TrendingUp className="w-3 h-3" />
-                        +18.7% from last month
+                      <p className="text-3xl font-bold text-orange-600">
+                        {formatNumber(repoArray.reduce((acc: number, repo: any) => acc + (repo.stars || 0), 0))}
                       </p>
                     </div>
                     <Star className="w-12 h-12 text-orange-500" />
@@ -301,20 +286,17 @@ export default function Analytics() {
                     <ResponsiveContainer width="100%" height={300}>
                       <RechartsPieChart>
                         <Pie
-                          data={contributionData}
+                          data={trendData}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
                           label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                           outerRadius={80}
                           fill="#8884d8"
-                          dataKey="value"
+                          dataKey="repositories"
                         >
-                          {contributionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
+                          <Tooltip />
                         </Pie>
-                        <Tooltip />
                       </RechartsPieChart>
                     </ResponsiveContainer>
                   </CardContent>
@@ -376,12 +358,11 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={400}>
-                      <RadarChart data={radarData}>
+                      <RadarChart data={languageData as any[]}>
                         <PolarGrid />
-                        <PolarAngleAxis dataKey="subject" />
+                        <PolarAngleAxis dataKey="name" />
                         <PolarRadiusAxis />
-                        <Radar name="Current" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
-                        <Radar name="Target" dataKey="B" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+                        <Radar name="Current" dataKey="popularity" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
                         <Tooltip />
                       </RadarChart>
                     </ResponsiveContainer>
@@ -413,7 +394,7 @@ export default function Analytics() {
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Growth</span>
-                                <span className="font-medium text-green-600">+{lang.growth}%</span>
+                                <span className="font-medium text-green-600">{lang.growth !== null && lang.growth !== undefined ? `+${lang.growth}%` : "-"}</span>
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Repositories</span>
@@ -421,7 +402,7 @@ export default function Analytics() {
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Developers</span>
-                                <span className="font-medium">{formatNumber(lang.developers)}</span>
+                                <span className="font-medium">{lang.developers !== null && lang.developers !== undefined ? formatNumber(lang.developers) : "-"}</span>
                               </div>
                             </div>
                           </CardContent>
